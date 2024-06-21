@@ -1,0 +1,9 @@
+#!/bin/bash
+
+mkdir -p $SNAP_DATA/extension
+find $SNAP/extension/ -name \* -exec ln -vs "{}" $SNAP_DATA/extension/ ';'
+mkdir -p $SNAP_DATA/lib
+find $SNAP/extension_libs/ -name \* -exec ln -vs "{}" $SNAP_DATA/lib/ ';'
+
+chown -R 584788:root $SNAP_DATA/extension/*
+chown -R 584788:root $SNAP_DATA/lib/*

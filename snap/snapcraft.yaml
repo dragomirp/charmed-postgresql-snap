@@ -22,6 +22,15 @@ system-usernames:
 plugs:
   shared-memory:
     private: true
+  timescale:
+    interface: content
+    target: $SNAP/timescale
+    #default-provider: charmed-postgresql-timescale
+
+hooks:
+  connect-plug-timescale:
+    plugs:
+      - timescale
 
 package-repositories:
   - type: apt
@@ -40,8 +49,6 @@ package-repositories:
     ppa: data-platform/python-pysyncobj
   - type: apt
     ppa: data-platform/pgbackrest-exporter
-  - type: apt
-    ppa: data-platform/postgresql-14-timescaledb
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -64,25 +71,27 @@ layout:
     bind: $SNAP/usr/share/perl
   /usr/local/lib/site_perl:
     bind: $SNAP/usr/local/lib/site_perl
-  /usr/lib/postgresql/14:
-    bind: $SNAP/usr/lib/postgresql/14
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
-  $SNAP/usr/share/postgresql/14/extension/postgis.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
-  $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
-    address_standardizer-3.control"
-  $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
-    address_standardizer_data_us-3.control"
-  $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
-  $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
-    postgis_tiger_geocoder-3.control"
-  $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
+  $SNAP/usr/share/postgresql/14/extension:
+    symlink: $SNAP_DATA/extension
+  $SNAP/usr/lib/postgresql/14/lib:
+    symlink: $SNAP_DATA/lib
+  # $SNAP/usr/share/postgresql/14/extension/postgis.control:
+  #   symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
+  # $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
+  #   symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  #   address_standardizer-3.control"
+  # $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
+  #   symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  #   address_standardizer_data_us-3.control"
+  # $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
+  #   symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
+  # $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
+  #   symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  #   postgis_tiger_geocoder-3.control"
+  # $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
+  #   symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
 
 # TODO: Add postgresql log path once configured
 slots:
@@ -239,7 +248,7 @@ parts:
       - locales-all
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
-      - postgresql-plpython3-14=14.11-0ubuntu0.22.04.1
+      - postgresql-plpython3-14=14.12-0ubuntu0.22.04.1
       - postgresql-contrib=14+238
       - postgresql-plperl-14
       - postgresql-14-similarity
@@ -255,8 +264,9 @@ parts:
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
       - postgresql-14-pgvector
-      - timescaledb
     organize:
+      usr/share/postgresql/14/extension: extension
+      usr/lib/postgresql/14/lib: extension_libs
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
       usr/share/doc/pgbouncer/copyright: licenses/COPYRIGHT-pgbouncer

@@ -6,6 +6,10 @@ mkdir -p $SNAP_DATA/etc/patroni
 mkdir -p $SNAP_DATA/etc/postgresql
 mkdir -p $SNAP_DATA/etc/pgbackrest
 mkdir -p $SNAP_DATA/etc/pgbouncer
+mkdir -p $SNAP_DATA/extension
+find $SNAP/extension/ -name \* -exec ln -vs "{}" $SNAP_DATA/extension/ ';'
+mkdir -p $SNAP_DATA/lib
+find $SNAP/extension_libs/ -name \* -exec ln -vs "{}" $SNAP_DATA/lib/ ';'
 
 mkdir -p $VAR_LIB_PGBACKREST
 mkdir -p $SNAP_COMMON/postgresql.failed

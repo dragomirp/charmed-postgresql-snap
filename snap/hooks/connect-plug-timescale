@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+mkdir -p $SNAP_DATA/extension
+find $SNAP/timescale/extension/ -name \* -exec ln -vs "{}" $SNAP_DATA/extension/ ';'
+chown -R snap_daemon:root $SNAP_DATA/extension
+mkdir -p $SNAP_DATA/lib
+find $SNAP/timescale/lib/ -name \* -exec ln -vs "{}" $SNAP_DATA/lib/ ';'
+chown -R snap_daemon:root $SNAP_DATA/lib
+
+exit 0
+
